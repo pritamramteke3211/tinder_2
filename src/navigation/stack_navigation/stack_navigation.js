@@ -8,7 +8,10 @@ const Stack = createNativeStackNavigator();
 export default StackNav = () => {
   const user = false;
   return (
-    <Stack.Navigator>
+    <Stack.Navigator 
+    screenOptions={{
+      headerShown: false
+    }}>
       {user ? (
         <>
           <Stack.Screen name="Home" component={Home} />
