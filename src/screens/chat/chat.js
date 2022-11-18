@@ -4,7 +4,7 @@ import React from 'react';
 const Chat = () => {
   return (
     <View>
-      <Text>s</Text>
+      <Text>Chat</Text>
     </View>
   );
 };
