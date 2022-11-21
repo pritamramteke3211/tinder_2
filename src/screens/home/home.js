@@ -19,23 +19,26 @@ const Home = ({navigation}) => {
     {
       firstName: "Person1",
       lastName: "Surname1",
-      occupation: "Software Developer",
+      job: "Software Developer",
       photoURL: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=600",
       age: 27,
+      id: 1,
     },
     {
       firstName: "Person2",
       lastName: "Surname2",
-      occupation: "Software Developer",
+      job: "Software Developer",
       photoURL: "https://images.pexels.com/photos/1040881/pexels-photo-1040881.jpeg?auto=compress&cs=tinysrgb&w=600",
       age: 40,
+      id: 2,
     },
     {
       firstName: "Person3",
       lastName: "Surname3",
-      occupation: "Software Developer",
+      job: "Software Developer",
       photoURL: "https://images.pexels.com/photos/697509/pexels-photo-697509.jpeg?auto=compress&cs=tinysrgb&w=600",
       age: 21,
+      id: 3,
     },
   ]
 
@@ -63,7 +66,7 @@ const Home = ({navigation}) => {
   
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{flex:1}}>
       {/* Header */}
       <View style={{
         flexDirection:'row',
@@ -84,14 +87,39 @@ const Home = ({navigation}) => {
       {/* End of Header */}
       
       {/* Cards */}
+      <View style={{flex:1, marginTop:-6}}>
       <Swiper
+      containerStyle={{backgroundColor:'transparent'}}
       cards={DUMMY_DATA}
-      renderCard={(card) => {
-        <View>
-          <Text>{card.firstName}</Text>
+      stackSize={3}
+      cardIndex={0}
+      animateCardOpacity
+      verticalSwipe={false}
+      renderCard={(card) =>( 
+        <View key={card.id} style={{backgroundColor:"white", borderRadius: 10, height:500,position:'relative'}}>
+          <Image
+          style={{position:'absolute',top:0,height:'100%', width:'100%', borderRadius: 10}}
+          source={{uri: card.photoURL}}
+          />
+          <View style={[{position:'absolute',bottom:0,backgroundColor:'white',width:'100%', height:'20%',flexDirection:'row',alignItems:'center', justifyContent:'space-between', paddingHorizontal:20, paddingVertical:5}, styles.cardShadow]}>
+            <View>
+              <Text style={{fontSize:16, fontWeight:'bold'}}>
+                {card.firstName} {card.lastName}
+              </Text>
+              <Text>
+                {card.job}
+              </Text>
+            </View>
+            <View>
+              <Text style={{fontSize:24, fontWeight:'bold'}}>
+              {card.age}
+              </Text>
+            </View>
+          </View>
         </View>
-      }}
+  )}
       />
+      </View>
 
     </SafeAreaView>
   );
@@ -99,4 +127,16 @@ const Home = ({navigation}) => {
 
 export default Home;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  cardShadow:{
+    shadowColor: "#000",
+    shadowOffset:{
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+
+    elevation: 2,
+  }
+});
