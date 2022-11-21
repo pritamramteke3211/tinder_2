@@ -8,11 +8,36 @@ import {
 import auth from '@react-native-firebase/auth';
 import { setLogin } from '../../store/feature/authentication/authentication';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Swiper from 'react-native-deck-swiper';
 
 const Home = ({navigation}) => {
   
   const dispatch = useDispatch()
   const userData = useSelector(state => state.authentication.user_data)
+
+  const DUMMY_DATA = [
+    {
+      firstName: "Person1",
+      lastName: "Surname1",
+      occupation: "Software Developer",
+      photoURL: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=600",
+      age: 27,
+    },
+    {
+      firstName: "Person2",
+      lastName: "Surname2",
+      occupation: "Software Developer",
+      photoURL: "https://images.pexels.com/photos/1040881/pexels-photo-1040881.jpeg?auto=compress&cs=tinysrgb&w=600",
+      age: 40,
+    },
+    {
+      firstName: "Person3",
+      lastName: "Surname3",
+      occupation: "Software Developer",
+      photoURL: "https://images.pexels.com/photos/697509/pexels-photo-697509.jpeg?auto=compress&cs=tinysrgb&w=600",
+      age: 21,
+    },
+  ]
 
   // Different to hide screen header
   // useLayoutEffect(() => {
@@ -57,11 +82,17 @@ const Home = ({navigation}) => {
       </TouchableOpacity>
       </View>
       {/* End of Header */}
+      
+      {/* Cards */}
+      <Swiper
+      cards={DUMMY_DATA}
+      renderCard={(card) => {
+        <View>
+          <Text>{card.firstName}</Text>
+        </View>
+      }}
+      />
 
-      <Text>home</Text>
-      <TouchableOpacity onPress={signOut}>
-        <Text>SignOut</Text>
-      </TouchableOpacity>
     </SafeAreaView>
   );
 };
