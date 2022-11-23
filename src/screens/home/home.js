@@ -1,5 +1,5 @@
 import {Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, { useEffect, useLayoutEffect } from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import {useDispatch, useSelector} from 'react-redux'
 import {
   GoogleSignin,
@@ -8,12 +8,15 @@ import {
 import auth from '@react-native-firebase/auth';
 import { setLogin } from '../../store/feature/authentication/authentication';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Entypo from 'react-native-vector-icons/Entypo';
+import AdIcon from 'react-native-vector-icons/AntDesign';
 import Swiper from 'react-native-deck-swiper';
 
 const Home = ({navigation}) => {
   
   const dispatch = useDispatch()
   const userData = useSelector(state => state.authentication.user_data)
+  const swipeRef = useRef(null);
 
   const DUMMY_DATA = [
     {
@@ -77,9 +80,11 @@ const Home = ({navigation}) => {
           <TouchableOpacity style={{}} onPress={signOut}>
             <Image source={{uri: userData.photoURL, width:35, height:35 }} borderRadius={25}/>
           </TouchableOpacity>
-          <TouchableOpacity>
+
+          <TouchableOpacity onPress={()=> navigation.navigate('Modal')}>
         <Image style={{width:60, height:60}} source={require('../../../assets/img/logo.png')} />
       </TouchableOpacity>
+
       <TouchableOpacity style={{}} onPress={()=> navigation.navigate('Chat')}>
           <Ionicons name="chatbubbles-sharp" color={"coral"} size={30} />        
       </TouchableOpacity>
@@ -89,11 +94,39 @@ const Home = ({navigation}) => {
       {/* Cards */}
       <View style={{flex:1, marginTop:-6}}>
       <Swiper
+      ref={swipeRef}
       containerStyle={{backgroundColor:'transparent'}}
       cards={DUMMY_DATA}
       stackSize={3}
       cardIndex={0}
       animateCardOpacity
+      onSwipedLeft={()=> {
+        console.log('Swipe PASS')
+      }}
+      onSwipedRight={()=>{
+        console.log('Swipe MATCH')
+      }}
+      backgroundColor={"#4FD0E9"}
+      overlayLabels={{
+        left: {
+          title: "NOPE",
+          style: {
+            label:{
+              textAlign: "right",
+              color: "red"
+            }
+          }
+        },
+        right: {
+          title: "MATCH",
+          style: {
+            label:{
+              textAlign: "left",
+              color: "green"
+            }
+          }
+        }
+      }}
       verticalSwipe={false}
       renderCard={(card) =>( 
         <View key={card.id} style={{backgroundColor:"white", borderRadius: 10, height:500,position:'relative'}}>
@@ -121,6 +154,19 @@ const Home = ({navigation}) => {
       />
       </View>
 
+      <View style={{flexDirection:'row', justifyContent:'space-evenly', alignItems:'center' }}>
+          <TouchableOpacity style={{alignItems:'center',justifyContent:'center', borderRadius:29, width:58,aspectRatio:1, backgroundColor:'#ff00007b'}}
+          onPress={()=> swipeRef.current.swipeLeft()}
+          >
+            <Entypo name="cross" size={24} color="red"/>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={{alignItems:'center',justifyContent:'center', borderRadius:29, width:58,aspectRatio:1, backgroundColor:'#00ff007a'}}
+          onPress={()=> swipeRef.current.swipeRight()}
+          >
+            <AdIcon name="heart" size={24} color="green"/>
+          </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
@@ -136,7 +182,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.2,
     shadowRadius: 1.41,
-
     elevation: 2,
   }
 });
