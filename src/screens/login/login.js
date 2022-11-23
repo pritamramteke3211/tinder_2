@@ -39,8 +39,6 @@ const Login = ({navigation}) => {
     return auth().signInWithCredential(googleCredential);
   };
 
-  
-
   return (
     <View style={styles.container}>
       <ImageBackground
