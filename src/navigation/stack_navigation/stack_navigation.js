@@ -8,7 +8,7 @@ import Modal from '../../screens/modal/modal';
 
 const Stack = createStackNavigator();
 
-export default StackNav = () => {
+export default StackNav = () => { 
   const logined = useSelector(state => state.authentication.login);
   return (
     <Stack.Navigator
