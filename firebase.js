@@ -1,11 +1,7 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import {getAuth} from "firebase/auth"
-import { getFirestore } from "firebase/firestore"
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import firebase from 'firebase/compat/app'
+import 'firebase/compat/auth'
+import 'firebase/compat/firestore'
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyAPCgF6HmxECEnzhBpBYSIc49gHraMwMBE",
   authDomain: "tinder2t.firebaseapp.com",
@@ -15,10 +11,9 @@ const firebaseConfig = {
   appId: "1:1019972796430:web:074c5070e8d3bf5a17bc5f"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig)
+    firebase.firestore().settings({ experimentalForceLongPolling: true }); 
+}
 
-const auth = getAuth();
-const db = getFirestore()
-
-export {auth, db}
+export { firebase };

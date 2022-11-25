@@ -1,12 +1,26 @@
 import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import React,{useState} from 'react'
-import { firebase } from '../../../firebase'
-import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import {firebase} from '../../../firebase'
+// import {
+//   addDoc,
+//   collection,
+//   doc,
+//   onSnapshot,
+//   orderBy,
+//   query,
+//   serverTimestamp,
+//   setDoc,
+// } from "firebase/firestore";
+// import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { useNavigation } from '@react-navigation/native';
 
-const Add = () => {
-  const userData = useSelector(state => state.authentication.user_data);
-    const todoRef = firebase.firestore().collection("users")
+const Modal = () => {
+    const userData = useSelector(state => state.authentication.user_data);
+    // console.log("userData",userData);
+
+    const todoRef = firebase.firestore().collection('users')
+    // const todoRef = firebase.firestore().collection('newData');
 
     const navigation = useNavigation()
     const [image, setimage] = useState(null)
@@ -15,23 +29,32 @@ const Add = () => {
 
     const incompleteForm = !image || !job || !age
 
-    const updateUserProfile = () => {
-        const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+    const updateUserProfile = async() => {
+      console.log("Tiil here")
+        
+      // setDoc(doc(db, 'users', userData.uid), {
+      //   id: userData.uid,
+      //   displayName: userData.displayName,
+      //   photoURL: image,
+      //   job: job,
+      //   age: age,
+      //   timestamp: serverTimestamp(),
+      // }).then(() => {
+      //   navigation.navigate('Home')
+      // }).catch(err => {
+      //   alert(err.messege)
+      // })
+try {
+  let resp = await todoRef.add({name:"ep",age:45})
+  console.log(
+    "resp",resp
+  )
+} catch (error) {
+  console.log("error occur",error);
+}
+     
+    }
 
-        const data = {
-        id: userData.uid,
-        displayName: userData.displayName,
-        photoURL: image,
-        job: job,
-        age: age,
-        added_at: timestamp
-        };
-        todoRef.add(data).then(()=> 
-       { 
-        navigation.navigate('Home')
-    }
-        ).catch(err => alert(err.message))
-    }
   return (
     <View style={{ flex:1, marginTop:10,borderRadius: 10,alignItems:'center', backgroundColor:'#fff'}}>
       <Image
@@ -84,9 +107,9 @@ const Add = () => {
       </TouchableOpacity>
 
     </View>
-  )
-}
+  );
+};
 
-export default Add
+export default Modal;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});
