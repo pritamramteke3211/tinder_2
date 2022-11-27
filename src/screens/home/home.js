@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect, useLayoutEffect, useRef} from 'react';
+import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
   GoogleSignin,
@@ -18,11 +18,16 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AdIcon from 'react-native-vector-icons/AntDesign';
 import Swiper from 'react-native-deck-swiper';
+import {firebase} from '../../../firebase'
 
 const Home = ({navigation}) => {
   const dispatch = useDispatch();
   const userData = useSelector(state => state.authentication.user_data);
   const swipeRef = useRef(null);
+  const [profiles, setprofiles] = useState([])
+  const [refresh, setrefresh] = useState(false)
+
+  const todoRef = firebase.firestore().collection("users")
 
   const DUMMY_DATA = [
     {
@@ -74,6 +79,46 @@ const Home = ({navigation}) => {
     }
   };
 
+  const getData = async() => {
+
+    const snapshot = await todoRef.get();
+    
+    let pdata = []
+    snapshot.forEach(doc => {
+      pdata.push(doc.data())
+    });
+    
+    if (pdata.filter(v => v.id !== userData.uid).length > 0) {
+      setprofiles(pdata.filter(v => v.id !== userData.uid))  
+    }
+    else{
+      navigation.navigate('Modal')
+    }
+    
+  }
+
+ 
+  useLayoutEffect(() => {
+    getData()
+    const willFocusSubscription = navigation.addListener("focus", () => {
+      getData();
+    });
+    return willFocusSubscription;
+
+  }, [])
+
+  const swipeLeft = async (cardIndex) => {
+    console.log("LEFT")
+    if (!profiles[cardIndex]) return;
+    const userSwiped = profiles[cardIndex]
+    console.log(`You Swiped PASS on ${userSwiped.displayName}`)
+
+  }
+
+  const swipeRight = async () => {
+
+  }
+  
   return (
     <SafeAreaView style={{flex: 1}}>
       {/* Header */}
@@ -112,15 +157,19 @@ const Home = ({navigation}) => {
         <Swiper
           ref={swipeRef}
           containerStyle={{backgroundColor: 'transparent'}}
-          cards={DUMMY_DATA}
+          cards={profiles}
           stackSize={3}
           cardIndex={0}
           animateCardOpacity
-          onSwipedLeft={() => {
-            console.log('Swipe PASS');
+          onSwipedLeft={(cardIndex) => {
+            // console.log('Swipe PASS');
+            swipeLeft(cardIndex)
+            setrefresh(!refresh)
           }}
-          onSwipedRight={() => {
-            console.log('Swipe MATCH');
+          onSwipedRight={(cardIndex) => {
+            // console.log('Swipe MATCH');
+            swipeRight(cardIndex)
+            setrefresh(!refresh)
           }}
           backgroundColor={'#4FD0E9'}
           overlayLabels={{
@@ -144,7 +193,9 @@ const Home = ({navigation}) => {
             },
           }}
           verticalSwipe={false}
-          renderCard={card => (
+          renderCard={card => 
+            card  
+             ? (
             <View
               key={card.id}
               style={{
@@ -153,6 +204,7 @@ const Home = ({navigation}) => {
                 height: 500,
                 position: 'relative',
               }}>
+            
               <Image
                 style={{
                   position: 'absolute',
@@ -181,7 +233,7 @@ const Home = ({navigation}) => {
                 ]}>
                 <View>
                   <Text style={{fontSize: 16, fontWeight: 'bold'}}>
-                    {card.firstName} {card.lastName}
+                    {card.displayName}
                   </Text>
                   <Text>{card.job}</Text>
                 </View>
@@ -192,7 +244,30 @@ const Home = ({navigation}) => {
                 </View>
               </View>
             </View>
-          )}
+          )
+        :
+    
+      <View
+      style={{
+        backgroundColor: 'white',
+        borderRadius: 10,
+        height: 500,
+        // position: 'relative',
+        alignItems:'center',
+        justifyContent:'center',
+      }}>
+        <Text style={{fontWeight:'bold',paddingBottom:20}}>No More Profiles</Text>
+        <Image 
+        style={{ 
+          height: 100,
+        width: 100,
+        borderRadius: 10,
+      }}
+        source={{ uri: "https://links.papareact.com/6gb" }}
+        />
+      
+    </View>
+        }
         />
       </View>
 
