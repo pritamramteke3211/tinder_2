@@ -18,9 +18,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AdIcon from 'react-native-vector-icons/AntDesign';
 import Swiper from 'react-native-deck-swiper';
-import {firebase} from '../../../firebase'
+import {firebase} from '../../../firebase';
+import {collection, getFirestore ,onSnapshot, doc, updateDoc,setDoc,getDocs, getDoc, query, where} from 'firebase/firestore'
 
 const Home = ({navigation}) => {
+
+
   const dispatch = useDispatch();
   const userData = useSelector(state => state.authentication.user_data);
   const swipeRef = useRef(null);
@@ -28,6 +31,10 @@ const Home = ({navigation}) => {
   const [refresh, setrefresh] = useState(false)
 
   const todoRef = firebase.firestore().collection("users")
+
+  const [fuser_id, setfuser_id] = useState(null)
+
+  const db =  getFirestore()
 
   const DUMMY_DATA = [
     {
@@ -80,20 +87,72 @@ const Home = ({navigation}) => {
   };
 
   const getData = async() => {
+  
+    
 
-    const snapshot = await todoRef.get();
+  
     
-    let pdata = []
-    snapshot.forEach(doc => {
-      pdata.push(doc.data())
-    });
+    // Method 1 to get
+    // const snapshot = await todoRef.get();
     
-    if (pdata.filter(v => v.id !== userData.uid).length > 0) {
-      setprofiles(pdata.filter(v => v.id !== userData.uid))  
-    }
-    else{
-      navigation.navigate('Modal')
-    }
+    // let pdata = []
+    // snapshot.forEach(doc => {
+    //   pdata.push(doc.data())
+
+    //   if (doc.data().id == userData.uid) {
+    //     setfuser_id(doc.id)
+    //   }
+    // });
+    
+    // if (pdata.filter(v => v.id !== userData.uid).length > 0) {
+    //   setprofiles(pdata.filter(v => v.id !== userData.uid))  
+    // }
+    // else{
+    //   navigation.navigate('Modal')
+    // }
+
+    
+
+    /// Method 2 to get
+    // const db = await getFirestore()
+    // const userRef = collection(db, 'users')
+    // console.log("userRef",userRef);
+
+    // onSnapshot(userRef, (snapshot) => {
+    //   let title = []
+    //   snapshot.docs.map((doc) => {
+    //     console.log("doc.id",doc.id)
+    //   })
+    // })
+
+
+    /// Method 3 to get
+    let unsub;
+    // let data = []
+    unsub = onSnapshot(collection(db, "users"), (snapshot) => {
+      let data = snapshot.docs.map((doc => ({fid: doc.id, ...doc.data()})))
+      let dats2 = data.filter(v => v.id === userData.uid)[0].fid
+      setfuser_id(dats2)
+    })
+
+    // console.log("fuser_id",fuser_id);
+    const passes = await getDocs(collection(db,'users',fuser_id,'passes')).then(snapshot => snapshot.docs.map(doc => doc.id))
+
+    // console.log("passes",passes)
+
+    const passedUserIds = passes.length > 0 ? passes : ['test'];
+
+    // console.log("passedUserIds",passedUserIds)
+    // console.log("UserDara.id",userData.uid)
+    
+    let unsubw;
+    // let data = []
+    unsubw = onSnapshot(query(collection(db, "users"), where('id', 'not-in', [...passedUserIds])), (snapshot) => {
+      let data2 = snapshot.docs.map((doc => ({fid: doc.id, ...doc.data()})))
+      .filter(doc => doc.id !== userData.uid )
+      setprofiles(data2)
+    })
+
     
   }
 
@@ -111,12 +170,23 @@ const Home = ({navigation}) => {
     console.log("LEFT")
     if (!profiles[cardIndex]) return;
     const userSwiped = profiles[cardIndex]
-    console.log(`You Swiped PASS on ${userSwiped.displayName}`)
+    console.log(`You Swiped PASS on ${userSwiped.id} ${userData.uid}`)
+    
+
+    console.log("fuser_id",fuser_id)
+
+    setDoc(doc(db,'users',fuser_id,'passes',userSwiped.id), userSwiped)
+
 
   }
 
   const swipeRight = async () => {
-
+    console.log("Right")
+    if (!profiles[cardIndex]) return;
+    const userSwiped = profiles[cardIndex]
+    console.log(`You Swiped PASS on ${userSwiped.id} ${userData.uid}`)
+    console.log("fuser_id",fuser_id)
+    setDoc(doc(db,'users',fuser_id,'passes',userSwiped.id), userSwiped)
   }
   
   return (
