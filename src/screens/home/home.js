@@ -88,10 +88,6 @@ const Home = ({navigation}) => {
 
   const getData = async() => {
   
-    
-
-  
-    
     // Method 1 to get
     // const snapshot = await todoRef.get();
     
@@ -128,35 +124,49 @@ const Home = ({navigation}) => {
 
     /// Method 3 to get
     let unsub;
-    // let data = []
-    unsub = onSnapshot(collection(db, "users"), (snapshot) => {
+    let dats2;
+    unsub = await onSnapshot(collection(db, "users"), (snapshot) => {
       let data = snapshot.docs.map((doc => ({fid: doc.id, ...doc.data()})))
-      let dats2 = data.filter(v => v.id === userData.uid)[0].fid
+      dats2 = data.filter(v => v.id === userData.uid)[0].fid
+      // console.log("dats2",dats2)
       setfuser_id(dats2)
     })
-
-    // console.log("fuser_id",fuser_id);
-    const passes = await getDocs(collection(db,'users',fuser_id,'passes')).then(snapshot => snapshot.docs.map(doc => doc.id))
-
-    // console.log("passes",passes)
-
-    const passedUserIds = passes.length > 0 ? passes : ['test'];
-
-    // console.log("passedUserIds",passedUserIds)
-    // console.log("UserDara.id",userData.uid)
     
-    let unsubw;
-    // let data = []
-    unsubw = onSnapshot(query(collection(db, "users"), where('id', 'not-in', [...passedUserIds])), (snapshot) => {
-      let data2 = snapshot.docs.map((doc => ({fid: doc.id, ...doc.data()})))
-      .filter(doc => doc.id !== userData.uid )
-      setprofiles(data2)
-    })
+    
+    
+    // const passes = await getDocs(collection(db,'users',dats2,'passes')).then(snapshot => snapshot.docs.map(doc => doc.id))
+    // const passedUserIds = passes.length > 0 ? passes : ['test'];
+    
+    // let unsubw;
+    // unsubw = onSnapshot(query(collection(db, "users"), where('id', 'not-in', [...passedUserIds])), (snapshot) => {
+    //   let data2 = snapshot.docs.map((doc => ({fid: doc.id, ...doc.data()})))
+    //   .filter(doc => doc.id !== userData.uid )
+    //   setprofiles(data2)
+    // })
 
     
   }
 
+  const filterPasses = async() => {
+    const passes = await getDocs(collection(db,'users',fuser_id,'passes')).then(snapshot => snapshot.docs.map(doc => doc.id))
+    const passedUserIds = passes.length > 0 ? passes : ['test'];
+    
+    let unsubw;
+    unsubw = onSnapshot(query(collection(db, "users"), where('id', 'not-in', [...passedUserIds])), (snapshot) => {
+      let data2 = snapshot.docs.map((doc => ({fid: doc.id, ...doc.data()})))
+      .filter(doc => doc.id !== userData.uid )
+      console.log(data2)
+      setprofiles(data2)
+    })
+  }
+
+ useEffect(() => {
+   if (fuser_id) {
+    filterPasses()
+   }
+ }, [fuser_id])
  
+
   useLayoutEffect(() => {
     getData()
     const willFocusSubscription = navigation.addListener("focus", () => {
