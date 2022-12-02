@@ -208,11 +208,12 @@ const Home = ({navigation}) => {
     if (!profiles[cardIndex]) return;
     const userSwiped = profiles[cardIndex];
     const loggedInProfile = await (
-      await getDoc(doc(db, 'users', fuser_id))
+      await getDoc(doc(db, 'users', userData.uid))
     ).data();
 
+    console.log('userSwiped.id', fuser_id);
     // Check if the user swiped on you...
-    getDoc(doc(db, 'users', userSwiped.fid, 'swipes', userData.uid)).then(
+    getDoc(doc(db, 'users', fuser_id, 'swipes', userData.uid)).then(
       documentSnapshot => {
         console.log(
           'Inside documentSnapshot',
@@ -223,18 +224,15 @@ const Home = ({navigation}) => {
           // user has matched with you before you matched with them...
 
           console.log(`Hooray, You MATCHED with ${userSwiped.displayName}`);
-          console.log('userSwiped', userSwiped);
-
           setDoc(
             doc(db, 'users', fuser_id, 'swipes', userSwiped.id),
             userSwiped,
           );
-          console.log('generated id', generateId(fuser_id, userSwiped.id));
-          console.log('loggedInProfile', loggedInProfile);
+
           // CREATE A MATCH
-          setDoc(doc(db, 'matches', generateId(fuser_id, userSwiped.id)), {
+          setDoc(doc(db, 'matches', generateId(userData.uid, userSwiped.id)), {
             users: {
-              [fuser_id]: loggedInProfile,
+              [userData.uid]: loggedInProfile,
               [userSwiped.id]: userSwiped,
             },
             usersMatched: [userData.uid, userSwiped.id],

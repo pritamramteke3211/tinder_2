@@ -1,7 +1,14 @@
-import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import {firebase} from '../../../firebase'
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, {useState} from 'react';
+import {useSelector} from 'react-redux';
+import {firebase} from '../../../firebase';
 // import {
 //   addDoc,
 //   collection,
@@ -13,99 +20,127 @@ import {firebase} from '../../../firebase'
 //   setDoc,
 // } from "firebase/firestore";
 // import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
-import { useNavigation } from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
 const Modal = () => {
-    const userData = useSelector(state => state.authentication.user_data);
-    // console.log("userData",userData);
+  const userData = useSelector(state => state.authentication.user_data);
+  // console.log("userData",userData);
 
-    const todoRef = firebase.firestore().collection('users')
-    // const todoRef = firebase.firestore().collection('newData');
+  const todoRef = firebase.firestore().collection('users');
+  // const todoRef = firebase.firestore().collection('newData');
 
-    const navigation = useNavigation()
-    const [image, setimage] = useState(null)
-    const [job, setjob] = useState(null)
-    const [age, setage] = useState(null)
+  const navigation = useNavigation();
+  const [image, setimage] = useState(null);
+  const [job, setjob] = useState(null);
+  const [age, setage] = useState(null);
 
-    const incompleteForm = !image || !job || !age
+  const incompleteForm = !image || !job || !age;
 
-    const updateUserProfile = async() => {
-      console.log("Tiil here")
-        
-      // setDoc(doc(db, 'users', userData.uid), {
-      //   id: userData.uid,
-      //   displayName: userData.displayName,
-      //   photoURL: image,
-      //   job: job,
-      //   age: age,
-      //   timestamp: serverTimestamp(),
-      // }).then(() => {
-      //   navigation.navigate('Home')
-      // }).catch(err => {
-      //   alert(err.messege)
-      // })
-try {
-  let resp = await todoRef.add({name:"ep",age:45})
-  console.log(
-    "resp",resp
-  )
-} catch (error) {
-  console.log("error occur",error);
-}
-     
+  const updateUserProfile = async () => {
+    console.log('Tiil here');
+
+    // setDoc(doc(db, 'users', userData.uid), {
+    //   id: userData.uid,
+    //   displayName: userData.displayName,
+    //   photoURL: image,
+    //   job: job,
+    //   age: age,
+    //   timestamp: serverTimestamp(),
+    // }).then(() => {
+    //   navigation.navigate('Home')
+    // }).catch(err => {
+    //   alert(err.messege)
+    // })
+    try {
+      let resp = await todoRef.add({name: 'ep', age: 45});
+      console.log('resp', resp);
+    } catch (error) {
+      console.log('error occur', error);
     }
+  };
 
   return (
-    <View style={{ flex:1, marginTop:10,borderRadius: 10,alignItems:'center', backgroundColor:'#fff'}}>
+    <View
+      style={{
+        flex: 1,
+        marginTop: 10,
+        borderRadius: 10,
+        alignItems: 'center',
+        backgroundColor: '#fff',
+      }}>
       <Image
-      style={{height: 100, width:'100%'}}
-      resizeMode="contain"
-      source={{uri: "https://links.papareact.com/2pf"}}
-      
+        style={{height: 100, width: '100%'}}
+        resizeMode="contain"
+        source={{uri: 'https://links.papareact.com/2pf'}}
       />
-      <Text style={{fontSize:18, color:'gray',padding:5, fontWeight:'bold'}}>
-       Welcome {userData.displayName}
+      <Text
+        style={{fontSize: 18, color: 'gray', padding: 5, fontWeight: 'bold'}}>
+        Welcome {userData.displayName}
       </Text>
 
-      <Text style={{textAlign:'center', fontWeight:'bold',padding:7, color:'red'}}>
-            Step 1: The Profile Pic
+      <Text
+        style={{
+          textAlign: 'center',
+          fontWeight: 'bold',
+          padding: 7,
+          color: 'red',
+        }}>
+        Step 1: The Profile Pic
       </Text>
       <TextInput
-      style={{paddingBottom:5,textAlign:'center',fontSize:16}}
-      placeholder="Enter a Profile Pic URL"
-      value={image}
-      onChangeText={setimage}
-      />
-      
-      <Text style={{textAlign:'center', fontWeight:'bold',padding:7, color:'red'}}>
-            Step 2: The Job
-      </Text>
-      <TextInput
-      style={{paddingBottom:5,textAlign:'center',fontSize:16}}
-      placeholder="Enter your occupation"
-      value={job}
-      onChangeText={setjob}
+        style={{paddingBottom: 5, textAlign: 'center', fontSize: 16}}
+        placeholder="Enter a Profile Pic URL"
+        value={image}
+        onChangeText={setimage}
       />
 
-      <Text style={{textAlign:'center', fontWeight:'bold',padding:7, color:'red'}}>
-            Step 3: The Age
+      <Text
+        style={{
+          textAlign: 'center',
+          fontWeight: 'bold',
+          padding: 7,
+          color: 'red',
+        }}>
+        Step 2: The Job
       </Text>
       <TextInput
-      style={{paddingBottom:5,textAlign:'center',fontSize:16}}
-      placeholder="Enter your age"
-      value={age}
-      onChangeText={setage}
-      maxLength={2}
+        style={{paddingBottom: 5, textAlign: 'center', fontSize: 16}}
+        placeholder="Enter your occupation"
+        value={job}
+        onChangeText={setjob}
       />
 
-      <TouchableOpacity 
-      disabled={incompleteForm}
-      style={{width:"40%", alignItems:'center',backgroundColor:incompleteForm ? "#80808070" : "#ff00007c", padding:12, borderRadius:10, position:'absolute', bottom:10}}
-      onPress={updateUserProfile}
-      >
-        <Text style={{color:'#fff',fontSize:16}}>Update Profile</Text>
+      <Text
+        style={{
+          textAlign: 'center',
+          fontWeight: 'bold',
+          padding: 7,
+          color: 'red',
+        }}>
+        Step 3: The Age
+      </Text>
+      <TextInput
+        style={{paddingBottom: 5, textAlign: 'center', fontSize: 16}}
+        placeholder="Enter your age"
+        value={age}
+        onChangeText={setage}
+        maxLength={2}
+      />
+
+      <TouchableOpacity
+        disabled={incompleteForm}
+        style={{
+          width: '40%',
+          alignItems: 'center',
+          backgroundColor: incompleteForm ? '#80808070' : '#ff00007c',
+          padding: 12,
+          borderRadius: 10,
+          position: 'absolute',
+          bottom: 10,
+        }}
+        onPress={updateUserProfile}>
+        <Text style={{color: '#fff', fontSize: 16}}>Update Profile</Text>
       </TouchableOpacity>
-
     </View>
   );
 };

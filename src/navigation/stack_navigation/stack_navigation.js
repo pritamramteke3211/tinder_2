@@ -4,11 +4,12 @@ import {useSelector} from 'react-redux';
 import Chat from '../../screens/chat/chat';
 import Home from '../../screens/home/home';
 import Login from '../../screens/login/login';
+import Match from '../../screens/match/Match';
 import Modal from '../../screens/modal/modal';
 
 const Stack = createStackNavigator();
 
-export default StackNav = () => { 
+export default StackNav = () => {
   const logined = useSelector(state => state.authentication.login);
   return (
     <Stack.Navigator
@@ -24,6 +25,9 @@ export default StackNav = () => {
           <Stack.Group
             screenOptions={{presentation: 'modal', gestureEnabled: true}}>
             <Stack.Screen name="Modal" component={Modal} />
+          </Stack.Group>
+          <Stack.Group screenOptions={{presentation: 'transparentModal'}}>
+            <Stack.Screen name="Match" component={Match} />
           </Stack.Group>
         </>
       ) : (

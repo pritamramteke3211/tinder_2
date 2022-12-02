@@ -45,18 +45,20 @@ const Login = ({navigation}) => {
         resizeMode="cover"
         style={{flex: 1}}
         source={{uri: 'https://tinder.com/static/tinder.png'}}>
-        <TouchableOpacity style={styles.btn}>
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={() =>
+            googleSign().then(res => {
+              console.log(res.user);
+
+              dispatch(setUserdata(res.user));
+              dispatch(setLogin(true));
+            })
+          }>
           <Text
             style={{textAlign: 'center', fontWeight: 'bold'}}
             // onPress={signOut}
-            onPress={() =>
-              googleSign().then(res => {
-                console.log(res.user);
-
-                dispatch(setUserdata(res.user));
-                dispatch(setLogin(true));
-              })
-            }>
+          >
             Signin in & get swiping
           </Text>
         </TouchableOpacity>
