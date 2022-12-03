@@ -1,11 +1,29 @@
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
-
-const Header = ({ title, callEnabled }) => {
+import FIcon from 'react-native-vector-icons/Foundation'
+import Ioicon from 'react-native-vector-icons/Ionicons'
+ 
+const Header = ({ title, callEnabled,navigation }) => {
   
     return (
-    <View style={{flexDirection:'row', alignItems:'center',justifyContent:'space-between'}}>
-      <Text>Header</Text>
+    <View style={{flexDirection:'row', alignItems:'center',justifyContent:'space-between', padding:10}}>
+      <View style={{flex:1, flexDirection:'row',alignItems:'center'}}>
+        <TouchableOpacity onPress={()=> navigation.goBack()} >
+          <Ioicon name="chevron-back" size={34} color="#FF5864" />
+        </TouchableOpacity>
+        <Text style={{fontSize: 18, fontWeight:'bold', paddingLeft: 10}} >{title}</Text>
+      </View>
+
+      
+      {
+      callEnabled && (
+        <TouchableOpacity style={{marginRight: 20, backgroundColor:'red', width:200}} >
+          <FIcon style={{}} name="telephone" size={20}/>
+        </TouchableOpacity>
+      )
+
+      }
+
     </View>
   )
 }
