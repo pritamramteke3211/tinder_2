@@ -49,7 +49,7 @@ const Login = ({navigation}) => {
           style={styles.btn}
           onPress={() =>
             googleSign().then(res => {
-              console.log(res.user);
+              // console.log(res.user);
 
               dispatch(setUserdata(res.user));
               dispatch(setLogin(true));

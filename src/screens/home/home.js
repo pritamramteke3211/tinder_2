@@ -13,7 +13,7 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
-import {setLogin} from '../../store/feature/authentication/authentication';
+import {setFid, setLogin, setUserdata} from '../../store/feature/authentication/authentication';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AdIcon from 'react-native-vector-icons/AntDesign';
@@ -46,36 +46,6 @@ const Home = ({navigation}) => {
   const [fuser_id, setfuser_id] = useState(null);
 
   const db = getFirestore();
-
-  const DUMMY_DATA = [
-    {
-      firstName: 'Person1',
-      lastName: 'Surname1',
-      job: 'Software Developer',
-      photoURL:
-        'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=600',
-      age: 27,
-      id: 1,
-    },
-    {
-      firstName: 'Person2',
-      lastName: 'Surname2',
-      job: 'Software Developer',
-      photoURL:
-        'https://images.pexels.com/photos/1040881/pexels-photo-1040881.jpeg?auto=compress&cs=tinysrgb&w=600',
-      age: 40,
-      id: 2,
-    },
-    {
-      firstName: 'Person3',
-      lastName: 'Surname3',
-      job: 'Software Developer',
-      photoURL:
-        'https://images.pexels.com/photos/697509/pexels-photo-697509.jpeg?auto=compress&cs=tinysrgb&w=600',
-      age: 21,
-      id: 3,
-    },
-  ];
 
   // Different to hide screen header
   // useLayoutEffect(() => {
@@ -135,8 +105,11 @@ const Home = ({navigation}) => {
     unsub = await onSnapshot(collection(db, 'users'), snapshot => {
       let data = snapshot.docs.map(doc => ({fid: doc.id, ...doc.data()}));
       dats2 = data.filter(v => v.id === userData.uid)[0].fid;
-      // console.log("dats2",dats2)
+
+      setFid(dats2)
       setfuser_id(dats2);
+  
+      
     });
 
     // const passes = await getDocs(collection(db,'users',dats2,'passes')).then(snapshot => snapshot.docs.map(doc => doc.id))
@@ -162,7 +135,7 @@ const Home = ({navigation}) => {
     const passedUserIds = passes.length > 0 ? passes : ['test'];
     const swipedUserIds = swipes.length > 0 ? swipes : ['test'];
 
-    console.log([...passedUserIds, ...swipedUserIds]);
+    
 
     let unsubw;
     unsubw = onSnapshot(
@@ -174,7 +147,7 @@ const Home = ({navigation}) => {
         let data2 = snapshot.docs
           .map(doc => ({fid: doc.id, ...doc.data()}))
           .filter(doc => doc.id !== userData.uid);
-        console.log(data2);
+       
         setprofiles(data2);
       },
     );
@@ -183,6 +156,7 @@ const Home = ({navigation}) => {
   useEffect(() => {
     if (fuser_id) {
       filterPasses();
+      
     }
   }, [fuser_id]);
 
@@ -214,11 +188,7 @@ const Home = ({navigation}) => {
     // Check if the user swiped on you...
     getDoc(doc(db, 'users', userSwiped.fid, 'swipes', userData.uid)).then(
       documentSnapshot => {
-        console.log(
-          'Inside documentSnapshot',
-          documentSnapshot,
-          documentSnapshot.exists(),
-        );
+        
         if (documentSnapshot.exists()) {
           // user has matched with you before you matched with them...
 
@@ -230,7 +200,7 @@ const Home = ({navigation}) => {
             userSwiped,
           );
           console.log('generated id', generateId(fuser_id, userSwiped.id));
-          console.log('loggedInProfile', loggedInProfile);
+          // console.log('loggedInProfile', loggedInProfile);
           // CREATE A MATCH
           setDoc(doc(db, 'matches', generateId(fuser_id, userSwiped.id)), {
             users: {
@@ -283,7 +253,7 @@ const Home = ({navigation}) => {
 
         <TouchableOpacity
           style={{}}
-          onPress={() => navigation.navigate('Chat')}>
+          onPress={() => navigation.navigate('Chat' , {fuser_id})}>
           <Ionicons name="chatbubbles-sharp" color={'coral'} size={30} />
         </TouchableOpacity>
       </View>

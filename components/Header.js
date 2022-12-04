@@ -2,9 +2,10 @@ import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-na
 import React from 'react'
 import FIcon from 'react-native-vector-icons/Foundation'
 import Ioicon from 'react-native-vector-icons/Ionicons'
+import { useNavigation } from '@react-navigation/native'
  
-const Header = ({ title, callEnabled,navigation }) => {
-  
+const Header = ({ title, callEnabled }) => {
+  const navigation = useNavigation()
     return (
     <View style={{flexDirection:'row', alignItems:'center',justifyContent:'space-between', padding:10}}>
       <View style={{flex:1, flexDirection:'row',alignItems:'center'}}>
