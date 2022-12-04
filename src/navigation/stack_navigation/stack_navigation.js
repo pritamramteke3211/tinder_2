@@ -5,6 +5,7 @@ import Chat from '../../screens/chat/chat';
 import Home from '../../screens/home/home';
 import Login from '../../screens/login/login';
 import Match from '../../screens/match/Match';
+import MessageScreen from '../../screens/messageScreen.js/MessageScreen';
 import Modal from '../../screens/modal/modal';
 
 const Stack = createStackNavigator();
@@ -21,6 +22,7 @@ export default StackNav = () => {
           <Stack.Group>
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Chat" component={Chat} />
+            <Stack.Screen name="Message" component={MessageScreen} />
           </Stack.Group>
           <Stack.Group
             screenOptions={{presentation: 'modal', gestureEnabled: true}}>

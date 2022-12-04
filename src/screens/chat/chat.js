@@ -6,14 +6,12 @@ import { useEffect } from 'react';
 import { useRoute } from '@react-navigation/native';
 
 const Chat = () => {
-  const {
-    params: {fuser_id},
-  } = useRoute();
+  
    
   return (
     <SafeAreaView>
       <Header title="Chat" />
-      <ChatList fuser_id={fuser_id}/>
+      <ChatList />
     </SafeAreaView>
   );
 };

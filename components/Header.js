@@ -18,8 +18,8 @@ const Header = ({ title, callEnabled }) => {
       
       {
       callEnabled && (
-        <TouchableOpacity style={{marginRight: 20, backgroundColor:'red', width:200}} >
-          <FIcon style={{}} name="telephone" size={20}/>
+        <TouchableOpacity style={{marginRight: 10, backgroundColor:'#fa868eb1', paddingVertical:8, paddingHorizontal:10, borderRadius: 20}} >
+          <FIcon style={{}} color='red' name="telephone" size={20}/>
         </TouchableOpacity>
       )
 

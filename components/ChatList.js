@@ -25,14 +25,14 @@ const ChatList = ({fuser_id}) => {
        )
     }, [userData])
     
-  console.log("matches",matches)
+ 
 
   return matches.length > 0 ? (
    <FlatList
    style={{height:'100%'}}
    data={matches}
    keyExtractor={item => item.fid}
-   renderItem={({item}) => <ChatRow matchDetails={item} fuser_id={fuser_id} />}
+   renderItem={({item}) => <ChatRow matchDetails={item}  />}
    />
   ) :
   (

@@ -6,10 +6,10 @@ import { useEffect } from 'react';
 import getMatchedUserInfo from '../lib/getMatchedUserInfo';
 import { useSelector } from 'react-redux';
 
-const ChatRow = ({matchDetails,fuser_id}) => {
+const ChatRow = ({matchDetails}) => {
     const navigation = useNavigation();
     const userData = useSelector(state => state.authentication.user_data);
-    const f_id = useSelector(state =>  state.authentication.f_id)
+    
 
     const [matchedUserInfo, setmatchedUserInfo] = useState(null)
 
@@ -24,14 +24,18 @@ const ChatRow = ({matchDetails,fuser_id}) => {
     marginHorizontal: 10, 
     paddingVertical: 10,
     paddingHorizontal: 10,
-    backgroundColor:'white'},styles.cardShadow]}>
+    backgroundColor:'white'},styles.cardShadow]}
+    onPress={()=> navigation.navigate('Message',{
+        matchDetails
+    })}
+    >
       <Image
       style={{height: 50, aspectRatio:1,borderRadius:5, marginRight:10}}
       source={{uri: matchedUserInfo?.photoURL}}
       />
 
       <View>
-        <Text style={{fontSize:20,fontWeight:'500'}}>
+        <Text style={{fontSize:18,fontWeight:'500'}}>
             {matchedUserInfo?.displayName}
         </Text>
         <Text>{"Say Hi!"}</Text>
