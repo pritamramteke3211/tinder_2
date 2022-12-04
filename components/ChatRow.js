@@ -5,17 +5,28 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import getMatchedUserInfo from '../lib/getMatchedUserInfo';
 import { useSelector } from 'react-redux';
+import { collection, getFirestore, onSnapshot, orderBy, query } from 'firebase/firestore';
 
 const ChatRow = ({matchDetails}) => {
     const navigation = useNavigation();
     const userData = useSelector(state => state.authentication.user_data);
-    
-
     const [matchedUserInfo, setmatchedUserInfo] = useState(null)
+    const [lastMessage, setlastMessage] = useState('')
+    const db = getFirestore()
 
     useEffect(() => {
       setmatchedUserInfo(getMatchedUserInfo(matchDetails.users, userData.uid))
     }, [matchDetails,userData])
+    
+    useEffect(
+        () =>
+          onSnapshot(
+            query(
+              collection(db, "matches", matchDetails.fid, "messages"),              
+              orderBy("timestamp", "desc")
+            ), snapshot => setlastMessage(snapshot.docs[0]?.data().message)
+          ),[(matchDetails, db)]
+      );
     
 
   return (
@@ -38,7 +49,7 @@ const ChatRow = ({matchDetails}) => {
         <Text style={{fontSize:18,fontWeight:'500'}}>
             {matchedUserInfo?.displayName}
         </Text>
-        <Text>{"Say Hi!"}</Text>
+        <Text>{lastMessage|| "Say Hi!"}</Text>
       </View>
     </TouchableOpacity>
   )

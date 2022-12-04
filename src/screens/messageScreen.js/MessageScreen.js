@@ -45,6 +45,7 @@ const MessageScreen = () => {
             photoURL: matchDetails?.users[userData?.uid]?.photoURL,
         })
         setinput("")
+        Keyboard.dismiss()
     }
     
   return (
@@ -56,7 +57,7 @@ const MessageScreen = () => {
       <KeyboardAvoidingView
       behavior={Platform.OS === "ios"? "padding" : "height"}
       style={{flex:1}}
-      keyboardVerticalOffset={10}
+      keyboardVerticalOffset={50}
       >
         
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
